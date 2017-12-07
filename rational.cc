@@ -8,6 +8,7 @@
 using namespace std;
 
 //FUNCTION PROTORYPES
+// Simplifies a fraction to have the lowest factored terms
 void simplify(int& num, int& denom);
 
 // constructors:
@@ -50,36 +51,13 @@ int Rational::d() const {
 
 // = this + other
 Rational Rational::plus(Rational other) const {
-
-  int smallerDenom;
-  int largerDenom;
-  int smaller;
-  int numOfSmallerDenom;
-  int numOfLargerDenom;
   int thisDenom = this->d();
   int thisNum = this->n();
-  // int otherDenom = other.d();
-  // int otherNum = other.n();
+  int otherDenom = other.d();
+  int otherNum = other.n();
 
-  if (thisDenom >= otherDenom) {
-    smallerDenom = otherDenom;
-    largerDenom = thisDenom;
-    smaller = otherDenom;
-    numOfSmallerDenom = other.n();
-    numOfLargerDenom = this->n();
-
-  } else if (otherDenom > thisDenom) {
-    smallerDenom = thisDenom;
-    largerDenom = otherDenom;
-    smaller = thisDenom;
-    numOfSmallerDenom = this->n();
-    numOfLargerDenom = other.n();
-  }
-
-  simplify(smallerDenom, largerDenom);
-
-  int finalNumerator = numOfSmallerDenom * largerDenom + numOfLargerDenom * smallerDenom;
-  int finalDenom = smaller * largerDenom;
+  int finalNumerator = thisNum * otherDenom + otherNum * thisDenom;
+  int finalDenom = thisDenom * otherDenom;
 
   Rational result = Rational(finalNumerator, finalDenom);
 
@@ -88,32 +66,61 @@ Rational Rational::plus(Rational other) const {
 
 // = this - other
 Rational Rational::minus(Rational other) const {
+  int thisDenom = this->d();
+  int thisNum = this->n();
+  int otherDenom = other.d();
+  int otherNum = other.n();
 
+  int finalNumerator = thisNum * otherDenom - otherNum * thisDenom;
+  int finalDenom = thisDenom * otherDenom;
+
+  Rational result = Rational(finalNumerator, finalDenom);
+
+  return result;
 }
 
 // = this * other
 Rational Rational::times(Rational other) const {
+  int thisDenom = this->d();
+  int thisNum = this->n();
+  int otherDenom = other.d();
+  int otherNum = other.n();
 
+  int finalNumerator = thisNum * otherNum;
+  int finalDenom = thisDenom * otherDenom;
+
+  Rational result = Rational(finalNumerator, finalDenom);
+
+  return result;
 }
 
 // = this / other
 Rational Rational::div(Rational other) const {
+  int thisDenom = this->d();
+  int thisNum = this->n();
+  int otherDenom = other.d();
+  int otherNum = other.n();
 
+  int finalNumerator = thisNum * otherDenom;
+  int finalDenom = thisDenom * otherNum;
+
+  Rational result = Rational(finalNumerator, finalDenom);
+
+  return result;
 }
 
-// Simplifies a fraction to have the lowest factored terms
 void simplify(int& num, int& denom) {
   int tempNum = num;
   int tempDenom = denom;
 
-  // denominator should always be non-negative
-  if (tempDenom < 1) {
-    tempNum *= -1;
-    tempDenom *= -1;
-  }
-
-  int gcd = tempDenom == 0 ? tempNum : __gcd(tempNum, tempDenom);
+  int gcd = tempDenom == 0 ? 1 : __gcd(tempNum, tempDenom);
 
   num = tempNum / gcd;
   denom = tempDenom / gcd;
+
+  // denominator should always be non-negative
+  if (denom < 0) {
+    num *= -1;
+    denom *= -1;
+  }
 }
