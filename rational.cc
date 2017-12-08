@@ -7,9 +7,9 @@
 #include <algorithm>
 using namespace std;
 
-//FUNCTION PROTORYPES
+// FUNCTION PROTORYPES
 // Simplifies a fraction to have the lowest factored terms
-void simplify(int& num, int& denom);
+int simplify(int n, int d);
 
 // constructors:
 
@@ -27,7 +27,17 @@ Rational::Rational(int n) {
 
 // Construct Rational n/d
 Rational::Rational(int n, int d) {
-  simplify(n, d);
+  int gcd = simplify(n, d);
+
+  n /= gcd;
+  d /= gcd;
+
+  // denominator should always be non-negative
+  if (d < 0) {
+    n *= -1;
+    d *= -1;
+  }
+
   num = n;
   denom = d;
 }
@@ -109,18 +119,7 @@ Rational Rational::div(Rational other) const {
   return result;
 }
 
-void simplify(int& num, int& denom) {
-  int tempNum = num;
-  int tempDenom = denom;
-
-  int gcd = tempDenom == 0 ? 1 : __gcd(tempNum, tempDenom);
-
-  num = tempNum / gcd;
-  denom = tempDenom / gcd;
-
-  // denominator should always be non-negative
-  if (denom < 0) {
-    num *= -1;
-    denom *= -1;
-  }
+int simplify(int n, int d) {
+  int gcd = d == 0 ? 1 : __gcd(n, d);
+  return gcd;
 }
